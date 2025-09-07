@@ -33,6 +33,7 @@ parts:
       - openjdk-17-jdk
     source: https://github.com/apache/tomcat
     source-type: git
+    # renovate: datasource=maven depName=org.apache.tomcat:tomcat-catalina
     source-tag: 9.0.109
     ant-build-targets: ["package"]
     ant-properties:
