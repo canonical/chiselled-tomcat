@@ -22,8 +22,28 @@ services:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-${CRAFT_ARCH_BUILD_FOR}/jre
       CATALINA_BASE: /var/lib/tomcat9
 
+run_user: _daemon_
+
 parts:
+
   tomcat:
+    plugin: ant
+    build-packages:
+      - ant
+      - openjdk-17-jdk
+    source: https://github.com/apache/tomcat
+    source-type: git
+    source-tag: 9.0.109
+    ant-build-targets: ["package"]
+    ant-properties:
+      tomcat.build: ${CRAFT_PART_INSTALL}/var/lib/tomcat9
+    override-build: |
+      craftctl default
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/temp
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/webapps
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/logs
+
+  deps:
     build-packages:
       - openjdk-8-jdk
     plugin: nil
@@ -33,7 +53,6 @@ parts:
     override-build: |
       chisel cut --release ./ --root ${CRAFT_PART_INSTALL}/ \
         busybox_bins \
-        tomcat9_core \
         libtcnative-1_libs \
         openjdk-8-jre-headless_core \
         openjdk-8-jre-headless_locale \
@@ -54,7 +73,5 @@ parts:
         ln -sf --relative \
         usr/lib/jvm/java-8-openjdk-${CRAFT_ARCH_BUILD_FOR}/jre/bin/java \
         usr/bin/
-      cd ${CRAFT_PART_INSTALL}/bin && for applet in $(./busybox --list); do \
-        ln -s busybox $applet ; \
-      done
+      chroot ${CRAFT_PART_INSTALL}/ /bin/busybox --install
       craftctl default
