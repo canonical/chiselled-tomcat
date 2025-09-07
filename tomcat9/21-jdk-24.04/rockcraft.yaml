@@ -1,9 +1,9 @@
 name: tomcat9
 
 base: bare
-build-base: ubuntu@22.04
+build-base: ubuntu@24.04
 
-version: '21-jre'
+version: '21-jdk'
 summary: Apache Tomcat 9
 license: Apache-2.0
 description: |
@@ -23,7 +23,26 @@ services:
       CATALINA_BASE: /var/lib/tomcat9
 
 parts:
+
   tomcat:
+    plugin: ant
+    build-packages:
+      - ant
+      - openjdk-17-jdk
+    source: https://github.com/apache/tomcat
+    source-type: git
+    # renovate: datasource=maven depName=org.apache.tomcat:tomcat-catalina
+    source-tag: 9.0.109
+    ant-build-targets: ["package"]
+    ant-properties:
+      tomcat.build: ${CRAFT_PART_INSTALL}/var/lib/tomcat9
+    override-build: |
+      craftctl default
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/temp
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/webapps
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/logs
+
+  deps:
     build-packages:
       - openjdk-21-jdk
     plugin: nil
@@ -37,7 +56,7 @@ parts:
         libtcnative-1_libs
 
       chisel cut --release ubuntu-22.04 --root ${CRAFT_PART_INSTALL}/ \
-        openjdk-21-jre-headless_standard \
+        openjdk-21-jdk-headless_standard \
         media-types_data \
         base-files_bin \
         base-files_chisel

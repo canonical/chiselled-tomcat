@@ -1,7 +1,7 @@
 name: tomcat9
 
 base: bare
-build-base: ubuntu@22.04
+build-base: ubuntu@24.04
 
 version: '8-jre'
 summary: Apache Tomcat 9
