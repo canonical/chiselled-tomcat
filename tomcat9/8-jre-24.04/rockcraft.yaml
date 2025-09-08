@@ -42,15 +42,9 @@ parts:
       mkdir -p ${CRAFT_PART_INSTALL}/usr/share/tomcat9
       cp -r output/build/* ${CRAFT_PART_INSTALL}/usr/share/tomcat9/
       # create CATALINA_BASE
-      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/conf
-      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/temp
-      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/webapps
-      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/logs
-      cp -R ${CRAFT_PART_INSTALL}/usr/share/tomcat9/conf/* ${CRAFT_PART_INSTALL}/var/lib/tomcat9/conf
-      chown -R 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/conf
-      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/temp
-      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/webapps
-      chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/logs
+      ${CRAFT_PART_INSTALL}/usr/share/tomcat9/bin/makebase.sh \
+        ${CRAFT_PART_INSTALL}/var/lib/tomcat9/
+      chown -R 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9
       craftctl default
 
   deps:
