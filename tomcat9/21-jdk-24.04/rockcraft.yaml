@@ -1,9 +1,9 @@
 name: tomcat9
 
 base: bare
-build-base: ubuntu@22.04
+build-base: ubuntu@24.04
 
-version: '8-jre'
+version: '21-jdk-24.04'
 summary: Apache Tomcat 9
 license: Apache-2.0
 description: |
@@ -19,15 +19,12 @@ services:
     command: /usr/share/tomcat9/bin/catalina.sh run
     startup: enabled
     environment:
-      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-${CRAFT_ARCH_BUILD_FOR}/jre
+      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
       CATALINA_BASE: /var/lib/tomcat9
 
-run_user: _daemon_
-
 parts:
-
   tomcat:
-    plugin: ant
+    plugin: nil
     build-packages:
       - ant
       - openjdk-17-jdk
@@ -35,44 +32,46 @@ parts:
     source-type: git
     # renovate: datasource=maven depName=org.apache.tomcat:tomcat-catalina
     source-tag: 9.0.109
-    ant-build-targets: ["package"]
-    ant-properties:
-      tomcat.build: ${CRAFT_PART_INSTALL}/var/lib/tomcat9
+    build-environment:
+      - JAVA_HOME: /usr/lib/jvm/java-17-openjdk-${CRAFT_ARCH_BUILD_FOR}/
     override-build: |
-      craftctl default
+      ant deploy
+      # deploy tomcat9
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/share/tomcat9
+      cp -r output/build/* ${CRAFT_PART_INSTALL}/usr/share/tomcat9/
+      # create CATALINA_BASE
+      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/conf
+      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/temp
+      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/webapps
+      mkdir -p ${CRAFT_PART_INSTALL}/var/lib/tomcat9/logs
+      cp -R ${CRAFT_PART_INSTALL}/usr/share/tomcat9/conf/* ${CRAFT_PART_INSTALL}/var/lib/tomcat9/conf
+      chown -R 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/conf
       chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/temp
       chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/webapps
       chown 584792:584792 ${CRAFT_PART_INSTALL}/var/lib/tomcat9/logs
+      craftctl default
 
   deps:
     build-packages:
-      - openjdk-8-jdk
+      - openjdk-21-jdk
     plugin: nil
     source: https://github.com/vpa1977/chisel-releases
     source-type: git
-    source-branch: ubuntu-22.04-tomcat9
+    source-branch: ubuntu-24.04-tomcat10
     override-build: |
       chisel cut --release ./ --root ${CRAFT_PART_INSTALL}/ \
         busybox_bins \
         libtcnative-1_libs \
-        openjdk-8-jre-headless_core \
-        openjdk-8-jre-headless_locale \
-        openjdk-8-jre-headless_security \
-        openjdk-8-jre-headless_management \
-        openjdk-8-jre-headless_jfr \
-        openjdk-8-jre-headless_tools \
-        openjdk-8-jre-headless_jplis \
-        openjdk-8-jre-headless_jndidns \
-        openjdk-8-jre-headless_zipfs \
-        openjdk-8-jre-headless_sctp \
+        openjdk-21-jdk-headless_standard \
         media-types_data \
         base-files_bin \
         base-files_chisel
 
+      mkdir -p ${CRAFT_PART_INSTALL}/etc/ssl/certs/java
       cp /etc/ssl/certs/java/cacerts ${CRAFT_PART_INSTALL}/etc/ssl/certs/java/cacerts
       cd ${CRAFT_PART_INSTALL} && \
         ln -sf --relative \
-        usr/lib/jvm/java-8-openjdk-${CRAFT_ARCH_BUILD_FOR}/jre/bin/java \
+        usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}/bin/java \
         usr/bin/
       chroot ${CRAFT_PART_INSTALL}/ /bin/busybox --install
       craftctl default
