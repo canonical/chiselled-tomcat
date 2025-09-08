@@ -22,10 +22,10 @@ suites:
       retry --times=10 --delay 2 -- docker run hello-world
 
       # Load the rock into docker
-      sudo rockcraft.skopeo --insecure-policy copy "oci-archive:$CRAFT_ARTIFACT" docker-daemon:tomcat9:8-jre-24.04
+      sudo rockcraft.skopeo --insecure-policy copy "oci-archive:$CRAFT_ARTIFACT" docker-daemon:tomcat9:21-jdk-24.04
 
     restore: |
-      docker image rm --force tomcat9:8-jre-24.04
+      docker image rm --force tomcat9:21-jdk-24.04
 
 exclude:
   - .git
