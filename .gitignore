@@ -12,3 +12,6 @@
 .vs_code/
 .vscode/
 .idea/
+# test data
+**/spread/**/*.war
+**/spread/**/*.sh
