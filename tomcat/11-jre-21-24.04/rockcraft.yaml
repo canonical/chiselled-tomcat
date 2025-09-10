@@ -1,0 +1,81 @@
+name: tomcat
+
+base: bare
+build-base: ubuntu@24.04
+
+version: '11-jre-21-24.04'
+summary: Apache Tomcat
+license: Apache-2.0
+description: |
+  Apache Tomcat implements the Java Servlet and the JavaServer Pages (JSP)
+  specifications from Oracle, and provides a "pure Java" HTTP web
+  server environment for Java code to run.
+platforms:
+    amd64:
+
+services:
+  tomcat:
+    override: replace
+    command: /usr/share/tomcat/bin/catalina.sh run
+    startup: enabled
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}
+      CATALINA_BASE: /var/lib/tomcat
+
+parts:
+  base-scripts:
+    plugin: dump
+    source: https://github.com/canonical/openjdk-rock-build-scripts
+    source-type: git
+    stage:
+      - build-tomcat.sh
+      - create-tomcat-jre-21.sh
+    override-prime:
+
+  tomcat:
+    plugin: nil
+    after:
+      - base-scripts
+    build-packages:
+      - ant
+      - openjdk-17-jdk
+    source: https://github.com/apache/tomcat
+    source-type: git
+    # renovate: datasource=maven depName=org.apache.tomcat:tomcat-catalina
+    source-tag: 11.0.11
+    build-environment:
+      - JAVA_HOME: /usr/lib/jvm/java-17-openjdk-${CRAFT_ARCH_BUILD_FOR}/
+    override-build: |
+      ${CRAFT_STAGE}/build-tomcat.sh tomcat11
+      craftctl default
+
+  # We can not build rock based on a rock
+  # copy-paste parts of https://github.com/canonical/jre-rock/tree/channels/21/edge/jre/ubuntu-24.04-headless
+  runtime:
+    plugin: nil
+    after:
+      - base-scripts
+    build-packages:
+      - openjdk-21-jdk-headless
+    source: https://github.com/vpa1977/chisel-releases
+    source-type: git
+    source-branch: ubuntu-24.04-tomcat10
+    override-build: |
+      ${CRAFT_STAGE}/create-tomcat-jre-21.sh
+      craftctl default
+
+  deb-security-manifest:
+    plugin: make
+    after:
+      - runtime
+      - tomcat
+    build-packages:
+      - busybox
+      - libtcnative-1
+    source: https://github.com/canonical/rocks-security-manifest
+    source-type: git
+    source-branch: main
+    override-prime: |
+      gen_manifest
+      cat ${CRAFT_STAGE}/tomcat.version >> ${CRAFT_PRIME}/usr/share/rocks/dpkg.query
+      craftctl default
