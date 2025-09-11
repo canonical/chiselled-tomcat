@@ -30,14 +30,14 @@ check-setup:
 .PHONY: test-all prepare-test
 test-all: prepare-test
 	@echo "Testing all rocks..."
-	@find ./ -type f -name "spread.yaml" | while read spread_file; do \
+	for spread_file in `find ./ -type f -name "spread.yaml"`; do \
 		rock_dir=$$(dirname $$spread_file); \
 		echo "Testing $$rock_dir..."; \
-		pushd $$rock_dir > /dev/null; \
+		(cd $$rock_dir; \
 		rockcraft test; \
 		rm -f .spread-reuse*; \
 		rm -rf .craft-spread*; \
-		popd > /dev/null; \
+		) \
 	done
 
 prepare-test:
