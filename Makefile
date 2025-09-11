@@ -35,7 +35,7 @@ test-all: prepare-test
 		echo "Testing $$rock_dir..."; \
 		pushd $$rock_dir > /dev/null; \
 		rockcraft test; \
-		rm .spread-reuse*; \
+		rm -f .spread-reuse*; \
 		rm -rf .craft-spread*; \
 		popd > /dev/null; \
 	done
