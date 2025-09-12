@@ -27,15 +27,26 @@ check-setup:
 
 
 # Test all rocks by finding directories that contain spread.yaml
-.PHONY: test-all
-test-all:
+.PHONY: test-all prepare-test
+test-all: prepare-test
 	@echo "Testing all rocks..."
-	@find ./ -type f -name "spread.yaml" | while read spread_file; do \
+	for spread_file in `find ./ -type f -name "spread.yaml"`; do \
 		rock_dir=$$(dirname $$spread_file); \
 		echo "Testing $$rock_dir..."; \
-		pushd $$rock_dir > /dev/null; \
+		(cd $$rock_dir; \
 		rockcraft test; \
-		rm .spread-reuse*; \
+		rm -f .spread-reuse*; \
 		rm -rf .craft-spread*; \
-		popd > /dev/null; \
+		) \
+	done
+
+prepare-test:
+	@find ./ -type f -name "spread.yaml" | while read spread_file; do \
+		rock_dir=$$(dirname $$spread_file); \
+		mkdir -p $$rock_dir/spread/general/petclinic/; \
+		cp test-data/petclinic.war $$rock_dir/spread/general/petclinic/; \
+	done
+	@find ./ -type f -name "task.yaml" | while read task_file; do \
+		test_dir=$$(dirname $$task_file); \
+		cp test-scripts/* $$test_dir/; \
 	done
