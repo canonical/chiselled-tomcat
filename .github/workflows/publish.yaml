@@ -78,8 +78,11 @@ jobs:
       arch-map: ${{ needs.get-runners.outputs.arch-map }}
       rockcraft-test: ${{ matrix.rock.test }}
 
+  prepare-test:
+    run: make prepare-test
+
   test:
-    needs: [tag-rocks, build, build-internal]
+    needs: [tag-rocks, build, build-internal, prepare-test]
     if: |
       always() && needs.tag-rocks.result == 'success' &&
       (needs.build-internal.result == 'success' && needs.build.result == 'skipped') ||
