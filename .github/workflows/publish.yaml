@@ -79,7 +79,9 @@ jobs:
       rockcraft-test: ${{ matrix.rock.test }}
 
   prepare-test:
-    run: make prepare-test
+    steps:
+      - name: prepare test data
+        run: make prepare-test
 
   test:
     needs: [tag-rocks, build, build-internal, prepare-test]
