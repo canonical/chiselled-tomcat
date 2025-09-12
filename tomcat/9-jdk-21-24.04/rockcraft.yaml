@@ -38,7 +38,7 @@ parts:
       - base-scripts
     build-packages:
       - ant
-      - openjdk-8-jdk
+      - openjdk-17-jdk
     source: https://github.com/apache/tomcat
     source-type: git
     # renovate: datasource=maven depName=org.apache.tomcat:tomcat-catalina
