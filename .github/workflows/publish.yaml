@@ -51,7 +51,7 @@ jobs:
     strategy:
       matrix:
         rock: ${{ fromJSON(needs.tag-rocks.outputs.json_result) }}
-    uses: canonical/oci-factory-internal/.github/workflows/Build-Rock.yaml@main
+    uses: canonical/oci-factory/.github/workflows/Build-Rock.yaml@main
     with:
       rock-repo: ${{ github.repository }}
       rock-repo-commit: ${{ github.ref }}
