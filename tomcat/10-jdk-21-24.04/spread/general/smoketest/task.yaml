@@ -1,8 +1,4 @@
 summary: tomcat smoke test
 
-# Tomcat smoke test.
-# Create and build webapp project
-# Run tomcat9 docker mounting webapp
-# Check that webapp runs and index page contains Hello World!
 execute: |
   ./test-smoke.sh
