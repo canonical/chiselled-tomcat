@@ -27,8 +27,8 @@ check-setup:
 
 
 # Test all rocks by finding directories that contain spread.yaml
-.PHONY: test-all prepare-test
-test-all: prepare-test
+.PHONY: test-all
+test-all:
 	@echo "Testing all rocks..."
 	for spread_file in `find ./ -type f -name "spread.yaml"`; do \
 		rock_dir=$$(dirname $$spread_file); \
@@ -38,15 +38,4 @@ test-all: prepare-test
 		rm -f .spread-reuse*; \
 		rm -rf .craft-spread*; \
 		) \
-	done
-
-prepare-test:
-	@find ./ -type f -name "spread.yaml" | while read spread_file; do \
-		rock_dir=$$(dirname $$spread_file); \
-		mkdir -p $$rock_dir/spread/general/petclinic/; \
-		cp test-data/petclinic.war $$rock_dir/spread/general/petclinic/; \
-	done
-	@find ./ -type f -name "task.yaml" | while read task_file; do \
-		test_dir=$$(dirname $$task_file); \
-		cp test-scripts/* $$test_dir/; \
 	done
