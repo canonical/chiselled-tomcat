@@ -13,6 +13,4 @@
 .vscode/
 .idea/
 # test data
-tomcat/**/*.war
-tomcat/**/*.sh
 examples/**/*.war
