@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -ex
 
 mvn archetype:generate -DgroupId=com.example \
     -DartifactId=hello-world-war \

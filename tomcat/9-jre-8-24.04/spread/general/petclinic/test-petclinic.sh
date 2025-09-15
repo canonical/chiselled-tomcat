@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/sh -ex
+
+git clone --depth 1 --branch v5.3.22 https://github.com/spring-petclinic/spring-framework-petclinic
+cd spring-framework-petclinic
+mvn -DskipTests package
+cd target
 
 docker rm -f tomcat
 docker run --name tomcat -d \
