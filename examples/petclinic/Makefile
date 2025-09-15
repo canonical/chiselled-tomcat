@@ -11,6 +11,6 @@ petclinic.war:
 	cp ../../test-data/petclinic.war .
 
 ubuntu/tomcat:
-	(cd ../../tomcat/9-jre-21-24.04 && rockcraft pack && \
-		rockcraft.skopeo copy oci-archive:tomcat_9-jre-21-24.04_amd64.rock \
-			"docker-daemon:ubuntu/tomcat:9-jre-21-24.04")
+	(cd ../../tomcat/10-jre-21-24.04 && rockcraft pack && \
+		rockcraft.skopeo copy oci-archive:tomcat_10-jre-21-24.04_amd64.rock \
+			"docker-daemon:ubuntu/tomcat:10-jre-21-24.04")
