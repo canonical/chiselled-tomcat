@@ -32,7 +32,7 @@ jobs:
       ghcr_upload: ${{ steps.read-config.outputs.ghcr_upload }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Read .github/ci.yaml with yq
         id: read-config
