@@ -12,3 +12,5 @@
 .vs_code/
 .vscode/
 .idea/
+# test data
+examples/**/*.war
