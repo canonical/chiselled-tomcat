@@ -10,7 +10,7 @@ suites:
   spread/general/:
     summary: General integration tests
     environment:
-      TOMCAT: 8-jre-8-24.04
+      TOMCAT: 9-jre-8-24.04
     prepare: |
       sudo snap install docker
 

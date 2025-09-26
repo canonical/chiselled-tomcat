@@ -3,7 +3,7 @@ name: tomcat
 base: bare
 build-base: ubuntu@24.04
 
-version: '8-jre-8-24.04'
+version: '9-jre-8-24.04'
 summary: Apache Tomcat
 license: Apache-2.0
 description: |

@@ -46,7 +46,7 @@ parts:
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-17-openjdk-${CRAFT_ARCH_BUILD_FOR}/
     override-build: |
-      ${CRAFT_STAGE}/build-tomcat.sh tomcat10
+      ${CRAFT_STAGE}/build-tomcat.sh tomcat9
       craftctl default
 
   # We can not build rock based on a rock
