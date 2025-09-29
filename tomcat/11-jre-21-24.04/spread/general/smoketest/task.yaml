@@ -1,0 +1,4 @@
+summary: tomcat smoke test
+
+execute: |
+  ./test-smoke.sh

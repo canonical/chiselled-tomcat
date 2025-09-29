@@ -1,0 +1,4 @@
+summary: tomcat petclinic test
+
+execute: |
+  ./test-petclinic.sh
