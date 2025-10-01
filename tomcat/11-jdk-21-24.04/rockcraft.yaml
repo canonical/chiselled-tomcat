@@ -40,7 +40,7 @@ parts:
     build-packages:
       - ant
       - openjdk-17-jdk
-    source: https://github.com/apache/tomcat
+    source: https://github.com/canonical/tomcat
     source-type: git
     # renovate: datasource=maven depName=org.apache.tomcat:tomcat-catalina
     source-tag: 11.0.11
